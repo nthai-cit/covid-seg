@@ -17,7 +17,7 @@ The dataset includes 829 slices belonging to 9 axial volumetric CTs. Furthermore
 | Infection Masks |  829   | 
 | Images |  829  | 
 | Infection Masks with COVID-19|  373 | 
-|
+||
 | Training set |  300   |  
 | Testing set |  73  | 
 

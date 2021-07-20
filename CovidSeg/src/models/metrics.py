@@ -4,7 +4,7 @@ from scipy import spatial
 import numpy as np
 import torch
 
-from sklearn.metrics import confusion_matrix, classification_report, plot_precision_recall_curve_
+from sklearn.metrics import confusion_matrix, classification_report
 from sklearn.metrics import ConfusionMatrixDisplay
 import segmentation_models_pytorch as smp
 import matplotlib.pyplot as plt 

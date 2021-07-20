@@ -29,7 +29,6 @@ class SemSeg(torch.nn.Module):
         super().__init__()
         self.exp_dict = exp_dict
         self.n_classes = train_set.n_classes
-        self.exp_dict = exp_dict
 
         self.model_base = models.base_networks.get_base(self.exp_dict['model'].get('base', 'unet2d'),
                                                self.exp_dict, n_classes=self.n_classes)
@@ -109,7 +108,8 @@ class SemSeg(torch.nn.Module):
         for c in range(self.n_classes):
             out_dict['iou_group%d' % c] = val_dict['iou'][c]
         out_dict['val_score'] = val_dict['val_score']
-        seg_monitor.report(savedir)
+        if self.exp_dict['test']:
+            seg_monitor.report(savedir)
         return out_dict
 
     def train_on_batch(self, batch, **extras):

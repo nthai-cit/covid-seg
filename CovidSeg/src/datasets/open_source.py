@@ -22,7 +22,7 @@ class OpenSource(torch.utils.data.Dataset):
         self.exp_dict = exp_dict
         self.datadir = datadir
         self.split = split
-        self.n_classes = 3
+        self.n_classes = 5
 
         self.img_path = os.path.join(datadir, 'OpenSourceDCMs')
         self.lung_path = os.path.join(datadir, 'LungMasks')

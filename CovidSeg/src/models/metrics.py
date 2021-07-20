@@ -5,13 +5,14 @@ import numpy as np
 import torch
 
 from sklearn.metrics import confusion_matrix, classification_report, plot_precision_recall_curve_
-from sklearn.metrics import plot_confusion_matrix_withcm, plot_confusion_matrix, roc_curve, auc
+from sklearn.metrics import ConfusionMatrixDisplay
 import segmentation_models_pytorch as smp
 import matplotlib.pyplot as plt 
 import os
 import pandas as pd 
 import json
 import numpy as np
+import itertools
 
 class SegMonitor:
     def __init__(self):
@@ -175,3 +176,53 @@ def confusion_binary_class(prediction, truth):
     cm = np.array([[tn, fp],
                    [fn, tp]])
     return cm
+
+
+def plot_confusion_matrix(cm, classes,
+                          normalize=False,
+                          title='Confusion matrix',
+                          cmap=plt.cm.Blues):
+    """
+    This function prints and plots the confusion matrix.
+    Normalization can be applied by setting `normalize=True`.
+    """
+    plt.imshow(cm, interpolation='nearest', cmap=cmap)
+    plt.title(title)
+    plt.colorbar()
+    tick_marks = np.arange(len(classes))
+    plt.xticks(tick_marks, classes, rotation=45)
+    plt.yticks(tick_marks, classes)
+
+    if normalize:
+        cm = cm.astype('float') / cm.suam(axis=1)[:, np.newaxis]
+
+    thresh = cm.max() / 2.
+    for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
+        plt.text(j, i, cm[i, j],
+                 horizontalalignment="center",
+                 color="white" if cm[i, j] > thresh else "black")
+
+    plt.tight_layout()
+    plt.ylabel('True label')
+    plt.xlabel('Predicted label')
+    plt.show()
+
+def plot_confusion_matrix_withcm(cm, labels=None,
+                          sample_weight=None, normalize=None,
+                          display_labels=None, include_values=True,
+                          xticks_rotation='horizontal',
+                          values_format=None,
+                          cmap='viridis', ax=None):
+
+
+    if display_labels is None:
+        if labels is None:
+            display_labels = ["0", "1", "2"]
+        else:
+            display_labels = labels
+
+    disp = ConfusionMatrixDisplay(confusion_matrix=cm,
+                                  display_labels=display_labels)
+    return disp.plot(include_values=include_values,
+                     cmap=cmap, ax=ax, xticks_rotation=xticks_rotation,
+                     values_format=values_format)

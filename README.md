@@ -38,3 +38,31 @@ The visualization of several samples with ground-truth and the prediction masks 
 <img src="results/results.png"  alt="test_preds" width="100%"/>
 Figure 2. The visualization of confusion matrix for segmentation model
 </p>
+
+
+# Installation
+
+## Clone the repository  and install the require packages:
+
+- Clone
+
+```
+git clone https://github.com/nthai-cit/covid-seg.git
+cd covid-seg
+```
+- Install the packages
+```
+pip install -r requirements.txt
+```
+
+## Training
+
+```
+./CovidSeg/run.sh
+```
+
+## Testing
+
+```
+python ./CovidSeg/evaluation.py
+```

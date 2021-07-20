@@ -152,6 +152,8 @@ def trainval(exp_dict, savedir_base, datadir, reset=False, num_workers=0):
                               batch_size=exp_dict["batch_size"], 
                               drop_last=True, num_workers=num_workers)
 
+    s_time = time.time()
+
     for e in range(s_epoch, exp_dict['max_epoch']):
         # Validate only at the start of each cycle
         score_dict = {}
@@ -170,12 +172,15 @@ def trainval(exp_dict, savedir_base, datadir, reset=False, num_workers=0):
         # Get new score_dict
         score_dict.update(train_dict)
         score_dict["epoch"] = len(score_list)
+        score_dict["time"] = time.time() - s_time
 
         # Add to score_list and save checkpoint
         score_list += [score_dict]
 
         # Report & Save
         score_df = pd.DataFrame(score_list)
+        score_df.to_csv(os.path.join(savedir, 'score.csv'))
+
         # print("\n", score_df.tail(), "\n")
         hu.torch_save(model_path, model.get_state_dict())
         hu.save_pkl(score_list_path, score_list)
@@ -206,6 +211,7 @@ if __name__ == "__main__":
     parser.add_argument("-b", "--base", default='') # timm-efficientnet-b0 
     parser.add_argument("-w", "--weight", default='') # imagenet+5k 
     parser.add_argument("-bs", "--batch_size", type=int, default=2) # batch_size
+    parser.add_argument("-t", "--test", type=bool, default=False)
 
     args = parser.parse_args()
 
@@ -226,24 +232,21 @@ if __name__ == "__main__":
 
     # Run experiments
     # ===============
-    if args.run_jobs:
-        import usr_configs as uc
-        uc.run_jobs(exp_list, args.savedir_base, args.datadir)
     
-    else:
-        for exp_dict in exp_list:
-            # do trainval
-            if args.encoder:
-                exp_dict['model']['encoder'] = args.encoder
-            if args.base:
-                exp_dict['model']['base'] = args.base
-            if args.weight:
-                exp_dict['model']['weight'] = args.weight
+    for exp_dict in exp_list:
+        # do trainval
+        if args.encoder:
+            exp_dict['model']['encoder'] = args.encoder
+        if args.base:
+            exp_dict['model']['base'] = args.base
+        if args.weight:
+            exp_dict['model']['weight'] = args.weight
 
-            exp_dict['batch_size'] = args.batch_size
+        exp_dict['batch_size'] = args.batch_size
+        exp_dict['test'] = args.test
 
-            trainval(exp_dict=exp_dict,
-                    savedir_base=args.savedir_base,
-                    datadir=args.datadir,
-                    reset=args.reset,
-                    num_workers=args.num_workers)
+        trainval(exp_dict=exp_dict,
+                savedir_base=args.savedir_base,
+                datadir=args.datadir,
+                reset=args.reset,
+                num_workers=args.num_workers)

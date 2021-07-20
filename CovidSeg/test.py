@@ -132,6 +132,7 @@ if __name__ == "__main__":
     parser.add_argument("-nw", "--num_workers", type=int, default=0)
     parser.add_argument("-ec", "--encoder", default='') # timm-efficientnet-b0
     parser.add_argument("-si", "--scan_id", type=str, default=None)
+    parser.add_argument("-t", "--test", type=bool, default=True)
 
     args = parser.parse_args()
 
@@ -157,6 +158,7 @@ if __name__ == "__main__":
     # Run experiments or View them
     # ----------------------------
     for exp_dict in exp_list:
+        exp_dict['test'] = args.test
         # do trainval
         test(exp_dict=exp_dict,
             savedir_base=args.savedir_base,

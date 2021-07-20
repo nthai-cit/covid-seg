@@ -1,9 +1,10 @@
+from datetime import time
 import os 
 import pandas as pd
 import numpy as np
 from haven import haven_utils as hu
 from src import models
-
+import time as t
 def count_params():
     base_path = os.path.join(os.getcwd(), 'CovidSeg', 'save')
     experiment_folders = os.listdir(base_path)
@@ -12,14 +13,14 @@ def count_params():
             continue
         os.system('python CovidSeg/count_params.py --exp_id {}'.format(exp))
 
-def eval():
+def evaluate():
     base_path = os.path.join(os.getcwd(), 'CovidSeg', 'save')
     experiment_folders = os.listdir(base_path)
     for exp in experiment_folders:
         if len(os.listdir(os.path.join(base_path, exp))) == 8: # Already evaluate.
             continue
         os.system('python CovidSeg/test.py --exp_id {}'.format(exp))
-        pass
+    
 
 def summary():
     base_path = os.path.join(os.getcwd(), 'CovidSeg', 'save')
@@ -37,7 +38,8 @@ def summary():
     pd.DataFrame(summaries).to_csv(os.path.join(base_path, 'result.csv'))
 
 if __name__ == '__main__':
-    eval()
-    # summary()
+    evaluate()
+    t.sleep(1)
+    summary()
     # count_params()
     pass

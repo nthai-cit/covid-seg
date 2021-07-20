@@ -1,6 +1,6 @@
 # COVID-19 Segmentation Based on CT images
 
-This is the implementation for the paper.
+This is the implementation for the paper: Configurations of Decoder based on UNET family and Feature Pyramid Network for COVID-19 Segmentation on CT images
 
 ## Overview
 

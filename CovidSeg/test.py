@@ -63,9 +63,14 @@ def test(exp_dict, savedir_base, datadir,  num_workers=0, scan_id=None,savedir='
     # Model
     # ==================
     # chk = torch.load('best_model.ckpt')
-    model = models.get_model(model_dict=exp_dict['model'],
+    if torch.cuda.is_available():
+        model = models.get_model(model_dict=exp_dict['model'],
                              exp_dict=exp_dict,
                              train_set=test_set).cuda()
+    else:
+        model = models.get_model(model_dict=exp_dict['model'],
+                             exp_dict=exp_dict,
+                             train_set=test_set).cpu()
     epoch = -1
 
 

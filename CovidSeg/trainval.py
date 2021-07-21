@@ -30,6 +30,43 @@ from torch.utils.data import DataLoader
 
 cudnn.benchmark = True
 
+def delete_and_backup_experiment(savedir, backup_flag=True):
+    """Delete an experiment. If the backup_flag is true it moves the experiment
+    to the delete folder.
+    
+    Parameters
+    ----------
+    savedir : str
+        Directory of the experiment
+    backup_flag : bool, optional
+        If true, instead of deleted is moved to delete folder, by default False
+    """
+    # get experiment id
+    exp_id = os.path.split(savedir)[-1]
+    
+    # get paths
+    savedir_base = os.path.dirname(savedir)
+    savedir = os.path.join(savedir_base, exp_id)
+
+    if backup_flag:
+        # create 'deleted' folder 
+        dst = os.path.join(savedir_base, 'deleted', exp_id)
+        os.makedirs(dst, exist_ok=True)
+
+        if os.path.exists(dst):
+            hc.shutil.rmtree(dst)
+    
+    if os.path.exists(savedir):
+        if backup_flag:
+            # moves folder to 'deleted'
+            hc.shutil.move(savedir, dst)
+        else:
+            # delete experiment folder 
+            hc.shutil.rmtree(savedir)
+
+    # make sure the experiment doesn't exist anymore
+    assert(not os.path.exists(savedir))
+
 def get_training_augmentation():
     train_transform = [
 
@@ -80,15 +117,18 @@ def get_validation_augmentation():
     return albu.Compose(test_transform)
 
 
-def trainval(exp_dict, savedir_base, datadir, reset=False, num_workers=0):
+def trainval(exp_dict, savedir_base, datadir,im_size, reset=False, num_workers=0):
     # bookkeepting stuff
     # ==================
     pprint.pprint(exp_dict)
     # exp_id = hu.hash_dict(exp_dict)
-    exp_id = '{}_{}'.format(exp_dict['model']['base'], exp_dict['model']['encoder'])
+    exp_id = '{}_{}'.format(exp_dict['model']['base'], exp_dict['model']['encoder'],im_size)
     savedir = os.path.join(savedir_base, exp_id)
     if reset:
-        hc.delete_and_backup_experiment(savedir)
+        try:
+            hc.delete_and_backup_experiment(savedir)
+        except:
+            delete_and_backup_experiment(savedir)
 
     os.makedirs(savedir, exist_ok=True)
     hu.save_json(os.path.join(savedir, "exp_dict.json"), exp_dict)
@@ -97,10 +137,12 @@ def trainval(exp_dict, savedir_base, datadir, reset=False, num_workers=0):
     # Dataset
     # ==================
     # train set
+    # nthai 2007 : add para im_size
     train_set = datasets.get_dataset(dataset_dict=exp_dict["dataset"],
                                      split="train",
                                      datadir=datadir,
                                      exp_dict=exp_dict,
+                                     im_size = im_size,
                                      dataset_size=exp_dict['dataset_size'],
                                      augmentation=get_training_augmentation())
     # val set
@@ -108,6 +150,7 @@ def trainval(exp_dict, savedir_base, datadir, reset=False, num_workers=0):
                                    split="val",
                                    datadir=datadir,
                                    exp_dict=exp_dict,
+                                   im_size = im_size,
                                    dataset_size=exp_dict['dataset_size'],
                                    augmentation=get_validation_augmentation())
 
@@ -119,9 +162,17 @@ def trainval(exp_dict, savedir_base, datadir, reset=False, num_workers=0):
                             num_workers=num_workers)
     # Model
     # ==================
-    model = models.get_model(model_dict=exp_dict['model'],
+    
+    # nthai
+
+    if torch.cuda.is_available():
+        model = models.get_model(model_dict=exp_dict['model'],
+                                exp_dict=exp_dict,
+                                train_set=train_set).cuda()
+    else:
+        model = models.get_model(model_dict=exp_dict['model'],
                              exp_dict=exp_dict,
-                             train_set=train_set).cuda()
+                             train_set=train_set).cpu()
 
     # model.opt = optimizers.get_optim(exp_dict['opt'], model)
     model_path = os.path.join(savedir, "model.pth")
@@ -211,7 +262,8 @@ if __name__ == "__main__":
     parser.add_argument("-b", "--base", default='') # timm-efficientnet-b0 
     parser.add_argument("-w", "--weight", default='') # imagenet+5k 
     parser.add_argument("-bs", "--batch_size", type=int, default=2) # batch_size
-    parser.add_argument("-t", "--test", type=bool, default=False)
+    parser.add_argument("-t", "--test", type=bool, default=False)   
+    parser.add_argument("-i", "--im_size", type=int, default=512) # image size for input
 
     args = parser.parse_args()
 
@@ -249,4 +301,5 @@ if __name__ == "__main__":
                 savedir_base=args.savedir_base,
                 datadir=args.datadir,
                 reset=args.reset,
+                im_size = args.im_size,
                 num_workers=args.num_workers)

@@ -118,7 +118,10 @@ class SemSeg(torch.nn.Module):
         self.opt.zero_grad()
 
         images, labels = batch["images"], batch["masks"]
-        images, labels = images.cuda(), labels.cuda()
+        if torch.cuda.is_available():
+            images, labels = images.cuda(), labels.cuda()
+        else:
+            images, labels = images.cpu(), labels.cpu()
         
         logits = self.model_base(images)
         # match image size
@@ -135,7 +138,10 @@ class SemSeg(torch.nn.Module):
         return {"train_loss": float(loss)}
 
     def predict_on_batch(self, batch):
-        images = batch["images"].cuda()
+        if torch.cuda.is_available():
+            images = batch["images"].cuda()
+        else:
+            images = batch["images"].cpu()
         n = images.shape[0]
         logits = self.model_base.forward(images)
         # logits = self.model_base(images)

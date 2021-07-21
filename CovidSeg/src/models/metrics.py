@@ -31,8 +31,10 @@ class SegMonitor:
         self.y_true += masks.numpy().tolist()
         self.y_pred += pred_mask.cpu().numpy().tolist()
 
-
-        dice = dice_coeff(masks.cuda(), pred_mask)
+        if torch.cuda.is_available():
+            dice = dice_coeff(masks.cuda(), pred_mask)
+        else:
+            dice = dice_coeff(masks.cpu(), pred_mask)
 
         cpu_p_mask = pred_mask.cpu().detach().numpy()
         cpu_mask = masks.cpu().detach().numpy()
@@ -43,7 +45,11 @@ class SegMonitor:
 
         labels = np.arange(model.n_classes)
 
-        cf = confusion_multi_class(pred_mask.float(), masks.cuda().float(),
+        if torch.cuda.is_available():
+            cf = confusion_multi_class(pred_mask.float(), masks.cuda().float(),
+                                   labels=labels)
+        else:
+            cf = confusion_multi_class(pred_mask.float(), masks.cpu().float(),
                                    labels=labels)
 
         if self.cf is None:
@@ -95,7 +101,11 @@ class LocMonitor:
         pred_mask = pred_mask[ind]
 
         labels = np.arange(model.n_classes)
-        cf = confusion_multi_class(pred_mask.float(), masks.cuda().float(),
+        if torch.cuda.is_available():
+            cf = confusion_multi_class(pred_mask.float(), masks.cuda().float(),
+                                   labels=labels)
+        else:
+            cf = confusion_multi_class(pred_mask.float(), masks.cpu().float(),
                                    labels=labels)
 
         if self.cf is None:

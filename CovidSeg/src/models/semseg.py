@@ -118,9 +118,9 @@ class SemSeg(torch.nn.Module):
         self.opt.zero_grad()
 
         images, labels = batch["images"], batch["masks"]
-        try:
+        if torch.cuda.is_available():
             images, labels = images.cuda(), labels.cuda()
-        except:
+        else:
             images, labels = images.cpu(), labels.cpu()
         
         logits = self.model_base(images)
@@ -138,9 +138,9 @@ class SemSeg(torch.nn.Module):
         return {"train_loss": float(loss)}
 
     def predict_on_batch(self, batch):
-        try:
+        if torch.cuda.is_available():
             images = batch["images"].cuda()
-        except:
+        else:
             images = batch["images"].cpu()
         n = images.shape[0]
         logits = self.model_base.forward(images)

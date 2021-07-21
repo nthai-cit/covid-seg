@@ -16,13 +16,18 @@ class OpenSource(torch.utils.data.Dataset):
         split,
         datadir,
         exp_dict,
+        im_size,
         augmentation=None, 
         preprocessing=None,
+       
     ):
+        # nthai 2007
+        self.im_size = im_size
+
         self.exp_dict = exp_dict
         self.datadir = datadir
         self.split = split
-        self.n_classes = 5
+        self.n_classes = 3
 
         self.img_path = os.path.join(datadir, 'OpenSourceDCMs')
         self.lung_path = os.path.join(datadir, 'LungMasks')
@@ -69,22 +74,23 @@ class OpenSource(torch.utils.data.Dataset):
         elif split == 'val':
             self.img_tgt_dict = self.img_tgt_dict[300:]
 
+    # nthai2007
     def __getitem__(self, i):
         out = self.img_tgt_dict[i]
         img_name, tgt_name, lung_name = out['img'], out['tgt'], out['lung']
 
         # read image
         image = read_xray(os.path.join(self.img_path, img_name))
-        image = Image.fromarray(image).resize((512, 512))
+        image = Image.fromarray(image).resize((self.im_size, self.im_size))
         image = np.array(image)
         # plt.imshow(image, cmap=plt.cm.bone) 
         # plt.show()
         # read infection mask
-        tgt_mask = np.array(Image.open(os.path.join(self.tgt_path, tgt_name)).resize((512, 512)).transpose(Image.FLIP_LEFT_RIGHT).rotate(90))
+        tgt_mask = np.array(Image.open(os.path.join(self.tgt_path, tgt_name)).resize((self.im_size, self.im_size)).transpose(Image.FLIP_LEFT_RIGHT).rotate(90))
         # plt.imshow(image, cmap=plt.cm.bone) 
         # plt.show()
         # read lung mask
-        lung_mask = np.array(Image.open(os.path.join(lung_name)).resize((512, 512)).transpose(Image.FLIP_LEFT_RIGHT))
+        lung_mask = np.array(Image.open(os.path.join(lung_name)).resize((self.im_size, self.im_size)).transpose(Image.FLIP_LEFT_RIGHT))
         mask = np.zeros(lung_mask.shape)
         mask[lung_mask!= 0] = 1
         mask[tgt_mask!= 0] = 2

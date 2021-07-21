@@ -30,6 +30,43 @@ from torch.utils.data import DataLoader
 
 cudnn.benchmark = True
 
+def delete_and_backup_experiment(savedir, backup_flag=True):
+    """Delete an experiment. If the backup_flag is true it moves the experiment
+    to the delete folder.
+    
+    Parameters
+    ----------
+    savedir : str
+        Directory of the experiment
+    backup_flag : bool, optional
+        If true, instead of deleted is moved to delete folder, by default False
+    """
+    # get experiment id
+    exp_id = os.path.split(savedir)[-1]
+    
+    # get paths
+    savedir_base = os.path.dirname(savedir)
+    savedir = os.path.join(savedir_base, exp_id)
+
+    if backup_flag:
+        # create 'deleted' folder 
+        dst = os.path.join(savedir_base, 'deleted', exp_id)
+        os.makedirs(dst, exist_ok=True)
+
+        if os.path.exists(dst):
+            hc.shutil.rmtree(dst)
+    
+    if os.path.exists(savedir):
+        if backup_flag:
+            # moves folder to 'deleted'
+            hc.shutil.move(savedir, dst)
+        else:
+            # delete experiment folder 
+            hc.shutil.rmtree(savedir)
+
+    # make sure the experiment doesn't exist anymore
+    assert(not os.path.exists(savedir))
+
 def get_training_augmentation():
     train_transform = [
 
@@ -87,8 +124,11 @@ def trainval(exp_dict, savedir_base, datadir, reset=False, num_workers=0):
     # exp_id = hu.hash_dict(exp_dict)
     exp_id = '{}_{}'.format(exp_dict['model']['base'], exp_dict['model']['encoder'])
     savedir = os.path.join(savedir_base, exp_id)
-    #if reset:
-    #    hc.delete_and_backup_experiment(savedir)
+    if reset:
+        try:
+            hc.delete_and_backup_experiment(savedir)
+        except:
+            delete_and_backup_experiment(savedir)
 
     os.makedirs(savedir, exist_ok=True)
     hu.save_json(os.path.join(savedir, "exp_dict.json"), exp_dict)

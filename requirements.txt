@@ -10,19 +10,14 @@ pydicom==2.1.2
 pydot==1.4.2
 Pygments==2.8.1
 randaugment==1.0.2
-scikit-image==0.18.1
-scikit-learn==0.23.2
-scipy==1.4.1
-seaborn==0.11.1
+scikit-image
+scikit-learn
+scipy
+seaborn
 segmentation-models-pytorch @ git+https://github.com/qubvel/segmentation_models.pytorch@33dc95082ea76fd83af2a8ebd7a4ecbd549aecfa
 timm==0.3.2
-torch==1.7.1+cu101
-torch-model-archiver==0.3.1
-torchaudio==0.7.2
-torchserve==0.3.1
-torchsummary==1.5.1
-torchtext==0.8.1
-torchvision==0.8.2+cu101
+--find-links https://download.pytorch.org/whl/torch_stable.html torch==1.7.1+cu101 torchvision==0.8.2+cu101 torchaudio==0.7.2
 tqdm==4.59.0
 traceback2==1.4.0
+
 

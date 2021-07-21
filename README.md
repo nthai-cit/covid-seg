@@ -55,7 +55,7 @@ cd covid-seg
 pip install -r requirements.txt
 ```
 
-## Training
+## Training (to reproduce the experiments with 20 configurations)
 
 ```
 ./CovidSeg/run.sh

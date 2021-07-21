@@ -87,8 +87,8 @@ def trainval(exp_dict, savedir_base, datadir, reset=False, num_workers=0):
     # exp_id = hu.hash_dict(exp_dict)
     exp_id = '{}_{}'.format(exp_dict['model']['base'], exp_dict['model']['encoder'])
     savedir = os.path.join(savedir_base, exp_id)
-    if reset:
-        hc.delete_and_backup_experiment(savedir)
+    #if reset:
+    #    hc.delete_and_backup_experiment(savedir)
 
     os.makedirs(savedir, exist_ok=True)
     hu.save_json(os.path.join(savedir, "exp_dict.json"), exp_dict)
@@ -119,9 +119,17 @@ def trainval(exp_dict, savedir_base, datadir, reset=False, num_workers=0):
                             num_workers=num_workers)
     # Model
     # ==================
-    model = models.get_model(model_dict=exp_dict['model'],
+    
+    # nthai
+
+    try:
+        model = models.get_model(model_dict=exp_dict['model'],
+                                exp_dict=exp_dict,
+                                train_set=train_set).cuda()
+    except:
+        model = models.get_model(model_dict=exp_dict['model'],
                              exp_dict=exp_dict,
-                             train_set=train_set).cuda()
+                             train_set=train_set).cpu()
 
     # model.opt = optimizers.get_optim(exp_dict['opt'], model)
     model_path = os.path.join(savedir, "model.pth")

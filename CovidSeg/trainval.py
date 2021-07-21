@@ -14,6 +14,7 @@ import pylab as plt
 import exp_configs
 import time
 import numpy as np
+import shutil
 
 from src import models
 from src import datasets
@@ -54,15 +55,15 @@ def delete_and_backup_experiment(savedir, backup_flag=True):
         os.makedirs(dst, exist_ok=True)
 
         if os.path.exists(dst):
-            hc.shutil.rmtree(dst)
+            shutil.rmtree(dst)
     
     if os.path.exists(savedir):
         if backup_flag:
             # moves folder to 'deleted'
-            hc.shutil.move(savedir, dst)
+            shutil.move(savedir, dst)
         else:
             # delete experiment folder 
-            hc.shutil.rmtree(savedir)
+            shutil.rmtree(savedir)
 
     # make sure the experiment doesn't exist anymore
     assert(not os.path.exists(savedir))

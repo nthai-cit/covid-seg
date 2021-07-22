@@ -30,7 +30,7 @@ cudnn.benchmark = True
 
 
 
-def test(exp_dict, savedir_base, datadir,  num_workers=0, scan_id=None,savedir=''):
+def test(exp_dict, savedir_base, datadir, im_size, num_workers=0, scan_id=None,savedir=''):
     # bookkeepting stuff
     # ==================
     pprint.pprint(exp_dict)
@@ -50,6 +50,7 @@ def test(exp_dict, savedir_base, datadir,  num_workers=0, scan_id=None,savedir='
                                    split="val",
                                    datadir=datadir,
                                    exp_dict=exp_dict,
+                                   im_size=im_size,
                                    dataset_size=exp_dict['dataset_size'])
     if str(scan_id) != 'None':
         test_set.active_data = test_set.get_scan(scan_id)
@@ -138,6 +139,8 @@ if __name__ == "__main__":
     parser.add_argument("-ec", "--encoder", default='') # timm-efficientnet-b0
     parser.add_argument("-si", "--scan_id", type=str, default=None)
     parser.add_argument("-t", "--test", type=bool, default=True)
+    parser.add_argument("-i", "--im_size", type=int, default=512) # image size for input
+
 
     args = parser.parse_args()
 
@@ -168,6 +171,7 @@ if __name__ == "__main__":
         test(exp_dict=exp_dict,
             savedir_base=args.savedir_base,
             datadir=args.datadir,
+            im_size=args.im_size,
             num_workers=args.num_workers,
             scan_id=args.scan_id,
             savedir=savedir)

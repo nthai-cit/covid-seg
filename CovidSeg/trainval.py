@@ -123,7 +123,7 @@ def trainval(exp_dict, savedir_base, datadir,im_size, reset=False, num_workers=0
     # ==================
     pprint.pprint(exp_dict)
     # exp_id = hu.hash_dict(exp_dict)
-    exp_id = '{}_{}'.format(exp_dict['model']['base'], exp_dict['model']['encoder'],im_size)
+    exp_id = '{}_{}'.format(exp_dict['model']['base'], exp_dict['model']['encoder'])
     savedir = os.path.join(savedir_base, exp_id)
     if reset:
         try:

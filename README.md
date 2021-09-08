@@ -2,6 +2,10 @@
 
 This is the implementation for the paper: Configurations of Decoder based on UNET family and Feature Pyramid Network for COVID-19 Segmentation on CT images
 
+Please cite the paper if it can help you. Thank you very much.
+```
+Nguyen HT, TT, Luong HH, Nguyen Huynh TK. 2021. Decoders configurations based on Unet family and feature pyramid network for COVID-19 Segmentation on CT images. PeerJ Comput. Sci. 7:e719 DOI 10.7717/peerj-cs.719
+```
 ## Overview
 
 Coronavirus Disease 2019 (COVID-19) pandemic is sweeping fiercely worldwide, causing many enormous negative impacts on human health and economics. According to World Health Organisation (WHO), until April 2021, more than one hundred million cases have been infected and caused 2.8 million deaths in over 200 countries and areas, and these numbers are still increasing. 

@@ -6,6 +6,21 @@ Please cite the paper if it can help you. Thank you very much.
 ```
 Nguyen HT, TT, Luong HH, Nguyen Huynh TK. 2021. Decoders configurations based on Unet family and feature pyramid network for COVID-19 Segmentation on CT images. PeerJ Comput. Sci. 7:e719 DOI 10.7717/peerj-cs.719
 ```
+
+```
+@article{Nguyen2021,
+  doi = {10.7717/peerj-cs.719},
+  url = {https://doi.org/10.7717/peerj-cs.719},
+  year = {2021},
+  month = sep,
+  publisher = {{PeerJ}},
+  volume = {7},
+  pages = {e719},
+  author = {Hai Thanh Nguyen and Toan Bao Tran and Huong Hoang Luong and Tuan Khoi Nguyen Huynh},
+  title = {Decoders configurations based on Unet family and feature pyramid network for {COVID}-19 segmentation on {CT} images},
+  journal = {{PeerJ} Computer Science}
+}
+```
 ## Overview
 
 Coronavirus Disease 2019 (COVID-19) pandemic is sweeping fiercely worldwide, causing many enormous negative impacts on human health and economics. According to World Health Organisation (WHO), until April 2021, more than one hundred million cases have been infected and caused 2.8 million deaths in over 200 countries and areas, and these numbers are still increasing. 

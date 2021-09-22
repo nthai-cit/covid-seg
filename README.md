@@ -3,6 +3,9 @@
 This is the implementation for the paper: Configurations of Decoder based on UNET family and Feature Pyramid Network for COVID-19 Segmentation on CT images
 
 Please cite the paper if it can help you. Thank you very much.
+
+Nguyen HT, Bao Tran T, Luong HH, Nguyen Huynh TK. 2021. Decoders configurations based on Unet family and feature pyramid network for COVID-19 segmentation on CT images. PeerJ Computer Science 7:e719 https://doi.org/10.7717/peerj-cs.719
+
 ```
 Nguyen HT, TT, Luong HH, Nguyen Huynh TK. 2021. Decoders configurations based on Unet family and feature pyramid network for COVID-19 Segmentation on CT images. PeerJ Comput. Sci. 7:e719 DOI 10.7717/peerj-cs.719
 ```

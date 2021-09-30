@@ -88,3 +88,5 @@ pip install -r requirements.txt
 ```
 python ./CovidSeg/evaluation.py
 ```
+
+![](https://komarev.com/ghpvc/?username=nthai-cit)
